@@ -1,0 +1,81 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f2f2f2;
+}
+
+header {
+    background: #1e90ff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.filters-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#search {
+    padding: 8px;
+    width: 200px;
+    flex: 1;
+    min-width: 150px;
+}
+
+#category {
+    padding: 8px;
+    min-width: 150px;
+}
+
+#newAd, #categorySelect {
+    padding: 8px;
+    margin: 5px;
+}
+
+#newAd {
+    flex: 1;
+    min-width: 150px;
+}
+
+#categorySelect {
+    min-width: 120px;
+}
+
+#ads {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.ad {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.ad:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ad-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.ad-category {
+    font-size: 0.85em;
+    background: #1e90ff;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
