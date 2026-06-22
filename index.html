@@ -4,18 +4,32 @@
 <header>
     <h1>📢 Малки обяви</h1>
 
-    <div class="filters-container">
-        <input id="search" placeholder="Търси обява...">
-        <select id="category">
-            <option value="All">Всички категории</option>
-            <option value="Cars">Коли</option>
-            <option value="Phones">Телефони</option>
-            <option value="Laptops">Лаптопи</option>
-            <option value="Games">Игри</option>
-        </select>
+    <div class="top-controls">
+        <div class="filters-container">
+            <input id="search" placeholder="Търси обява...">
+            <select id="category">
+                <option value="All">Всички категории</option>
+                <option value="Cars">Коли</option>
+                <option value="Phones">Телефони</option>
+                <option value="Laptops">Лаптопи</option>
+                <option value="Games">Игри</option>
+            </select>
+        </div>
+        <div class="control-right">
+            <div class="sort-container">
+                <label for="sortOrder">Сортиране:</label>
+                <select id="sortOrder">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="az">Alphabetical A-Z</option>
+                    <option value="za">Alphabetical Z-A</option>
+                </select>
+            </div>
+            <button id="themeToggle" class="theme-toggle">Dark Mode</button>
+        </div>
     </div>
 
-    <div style="margin-top:10px;">
+    <div class="add-container">
         <input id="newAd" placeholder="Напиши нова обява">
         <select id="categorySelect">
             <option value="Cars">Коли</option>
@@ -25,11 +39,29 @@
         </select>
         <button onclick="addAd()">Добави</button>
     </div>
+    <div id="resultCount" class="result-count"></div>
 </header>
 
 <main>
     <div id="ads"></div>
 </main>
+
+<div id="editModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Редактирай обява</h2>
+        <input id="editTitle" placeholder="Нов текст на обявата">
+        <select id="editCategory">
+            <option value="Cars">Коли</option>
+            <option value="Phones">Телефони</option>
+            <option value="Laptops">Лаптопи</option>
+            <option value="Games">Игри</option>
+        </select>
+        <div class="modal-actions">
+            <button onclick="saveEdit()">Запази</button>
+            <button class="secondary" onclick="closeEditModal()">Откажи</button>
+        </div>
+    </div>
+</div>
 
 <script src="script.js"></script>
 </body>
