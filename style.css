@@ -2,15 +2,20 @@
     box-sizing: border-box;
 }
 
+.hidden {
+    display: none !important;
+}
+
 body {
     font-family: "Inter", Arial, sans-serif;
     margin: 0;
-    background: #f2f2f2;
+    background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
     color: #111827;
+    min-height: 100vh;
 }
 
 body.dark {
-    background: #0f172a;
+    background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
     color: #f8fafc;
 }
 
@@ -26,26 +31,106 @@ body.dark header {
 }
 
 header h1 {
+    margin: 0 0 16px;
+    font-size: clamp(2.2rem, 3vw, 3.25rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+}
+
+header {
+    padding: 36px 16px 32px;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+}
+
+.hero {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 12px 0 24px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-copy {
+    margin: 16px 0 0;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 720px;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 24px auto 0;
+    max-width: 980px;
+    width: 100%;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+    padding: 20px 18px;
+    text-align: left;
+}
+
+body.dark .stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.stat-label {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-card h2 {
     margin: 0;
     font-size: 2rem;
-    letter-spacing: -0.02em;
+    color: white;
 }
 
 .top-controls {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 16px;
     align-items: center;
-    margin-top: 18px;
+    margin-top: 32px;
+}
+
+.tool-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .control-right {
     display: flex;
     align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-end;
+    width: 100%;
 }
 
 .sort-container {
@@ -58,12 +143,13 @@ header h1 {
     font-weight: 600;
 }
 
-.filters-container,
 .add-container {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(170px, 220px) minmax(120px, max-content);
+    gap: 12px;
+    align-items: center;
     justify-content: center;
+    margin-top: 26px;
 }
 
 #search,
@@ -106,10 +192,25 @@ body.dark .modal-content {
     color: #f8fafc;
 }
 
+.modal-content {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 32px 80px rgba(15, 23, 42, 0.18);
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 10px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+}
+
 body.dark .modal-content input,
 body.dark .modal-content select {
     background: #0f172a;
-    border-color: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.18);
     color: #f8fafc;
 }
 
@@ -130,32 +231,94 @@ button:hover,
 
 #ads {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 18px;
-    padding: 24px;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 18px 0 0;
     margin: 0 auto;
 }
 
 .ad {
     background: white;
-    padding: 22px;
-    border-radius: 24px;
-    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.08);
+    padding: 24px;
+    border-radius: 28px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     display: flex;
     flex-direction: column;
-    min-height: 240px;
+    min-height: 260px;
 }
 
 body.dark .ad {
     background: #111827;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
 }
 
 .ad:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 34px 70px rgba(15, 23, 42, 0.14);
+    transform: translateY(-8px);
+    box-shadow: 0 38px 78px rgba(15, 23, 42, 0.18);
+}
+
+.ad-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.ad-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    background: #f3f4f6;
+}
+
+.ad-image.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+.ad-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+body.dark .ad-price {
+    color: #f8fafc;
+}
+
+.hero,
+.stats-grid,
+.top-controls,
+.add-container,
+#ads,
+.no-results {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#ads {
+    margin-top: 28px;
+}
+
+.ad-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    background: rgba(30, 64, 175, 0.1);
+    font-size: 1.35rem;
+}
+
+body.dark .ad-icon {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .ad-title {
@@ -163,6 +326,73 @@ body.dark .ad {
     font-weight: 700;
     margin: 0;
     color: #111827;
+}
+
+body.dark .ad-title {
+    color: #f8fafc;
+}
+
+.ad-date {
+    font-size: 0.92rem;
+    color: #6b7280;
+}
+
+body.dark .ad-date {
+    color: #d1d5db;
+}
+
+.ad-category {
+    font-size: 0.88rem;
+    background: #e0f2fe;
+    color: #0c4a6e;
+    padding: 7px 12px;
+    border-radius: 999px;
+    width: fit-content;
+}
+
+body.dark .ad-category {
+    background: #1e3a8a;
+    color: #dbeafe;
+}
+
+.ad-category.cars {
+    background: #fde68a;
+    color: #92400e;
+}
+
+.ad-category.phones {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.ad-category.laptops {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.ad-category.games {
+    background: #fbcfe8;
+    color: #831843;
+}
+
+body.dark .ad-category.cars {
+    background: #78350f;
+    color: #fde68a;
+}
+
+body.dark .ad-category.phones {
+    background: #1e3a8a;
+    color: #dbeafe;
+}
+
+body.dark .ad-category.laptops {
+    background: #064e3b;
+    color: #d1fae5;
+}
+
+body.dark .ad-category.games {
+    background: #831843;
+    color: #fbcfe8;
 }
 
 body.dark .ad-title {
@@ -196,6 +426,7 @@ body.dark .ad-category {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .ad-button {
@@ -337,3 +568,4 @@ body.dark .modal-actions .secondary {
         padding: 18px;
     }
 }
+

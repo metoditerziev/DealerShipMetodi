@@ -1,23 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <h1>📢 Малки обяви</h1>
+    <div class="hero">
+        <div>
+            <p class="eyebrow">Classifieds made easy</p>
+            <h1>Find the perfect item or post your own ad.</h1>
+            <p class="hero-copy">Explore listings for cars, phones, laptops, and games — all in a modern, easy-to-use marketplace.</p>
+        </div>
+    </div>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <p class="stat-label">Total Ads</p>
+            <h2 id="totalAds">0</h2>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Visible Ads</p>
+            <h2 id="visibleAds">0</h2>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Categories</p>
+            <h2 id="totalCategories">0</h2>
+        </div>
+    </section>
 
     <div class="top-controls">
-        <div class="filters-container">
-            <input id="search" placeholder="Търси обява...">
+        <div class="tool-bar">
+            <input id="search" placeholder="Search ads...">
             <select id="category">
-                <option value="All">Всички категории</option>
-                <option value="Cars">Коли</option>
-                <option value="Phones">Телефони</option>
-                <option value="Laptops">Лаптопи</option>
-                <option value="Games">Игри</option>
+                <option value="All">All Categories</option>
+                <option value="Cars">Cars</option>
+                <option value="Phones">Phones</option>
+                <option value="Laptops">Laptops</option>
+                <option value="Games">Games</option>
             </select>
-        </div>
-        <div class="control-right">
             <div class="sort-container">
-                <label for="sortOrder">Сортиране:</label>
+                <label for="sortOrder">Sort:</label>
                 <select id="sortOrder">
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
@@ -25,31 +52,39 @@
                     <option value="za">Alphabetical Z-A</option>
                 </select>
             </div>
-            <button id="themeToggle" class="theme-toggle">Dark Mode</button>
         </div>
+        <button id="themeToggle" class="theme-toggle">Dark Mode</button>
     </div>
 
     <div class="add-container">
-        <input id="newAd" placeholder="Напиши нова обява">
+        <input id="newAd" placeholder="Create a new ad">
+        <input id="newPrice" placeholder="Price (e.g. 5000)" inputmode="numeric">
+        <input id="newImage" placeholder="Image URL (optional)">
         <select id="categorySelect">
-            <option value="Cars">Коли</option>
-            <option value="Phones">Телефони</option>
-            <option value="Laptops">Лаптопи</option>
-            <option value="Games">Игри</option>
+            <option value="Cars">Cars</option>
+            <option value="Phones">Phones</option>
+            <option value="Laptops">Laptops</option>
+            <option value="Games">Games</option>
         </select>
-        <button onclick="addAd()">Добави</button>
+        <button onclick="addAd()">Add Ad</button>
     </div>
     <div id="resultCount" class="result-count"></div>
 </header>
 
 <main>
+    <div id="noResults" class="no-results hidden">
+    No ads found.
+</div>
     <div id="ads"></div>
+    <div id="noResults" class="no-results hidden">No ads found.</div>
 </main>
 
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
         <h2>Редактирай обява</h2>
         <input id="editTitle" placeholder="Нов текст на обявата">
+        <input id="editPrice" placeholder="Price (e.g. 5000)" inputmode="numeric">
+        <input id="editImage" placeholder="Image URL (optional)">
         <select id="editCategory">
             <option value="Cars">Коли</option>
             <option value="Phones">Телефони</option>

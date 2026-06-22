@@ -1,26 +1,40 @@
 const STORAGE_KEY = "simpleAdsStorage";
 let ads = [
-    { id: 1, title: "BMW E46 - 5000лв", category: "Cars", createdAt: "2026-06-10T09:15:00.000Z" },
-    { id: 2, title: "Audi A4 2008", category: "Cars", createdAt: "2026-06-12T14:20:00.000Z" },
-    { id: 3, title: "iPhone 13 Pro", category: "Phones", createdAt: "2026-06-15T08:45:00.000Z" },
-    { id: 4, title: "PS5 конзола", category: "Games", createdAt: "2026-06-18T17:30:00.000Z" },
-    { id: 5, title: "Лаптоп Lenovo i5", category: "Laptops", createdAt: "2026-06-20T11:00:00.000Z" }
+    { id: 1, title: "BMW E46 - 5000лв", category: "Cars", price: "5000лв", imageUrl: "https://picsum.photos/seed/bmw/800/500", createdAt: "2026-06-10T09:15:00.000Z" },
+    { id: 2, title: "Audi A4 2008", category: "Cars", price: "6200лв", imageUrl: "https://picsum.photos/seed/audi/800/500", createdAt: "2026-06-12T14:20:00.000Z" },
+    { id: 3, title: "iPhone 13 Pro", category: "Phones", price: "1200лв", imageUrl: "https://picsum.photos/seed/iphone/800/500", createdAt: "2026-06-15T08:45:00.000Z" },
+    { id: 4, title: "PS5 конзола", category: "Games", price: "900лв", imageUrl: "https://picsum.photos/seed/ps5/800/500", createdAt: "2026-06-18T17:30:00.000Z" },
+    { id: 5, title: "Лаптоп Lenovo i5", category: "Laptops", price: "1500лв", imageUrl: "https://picsum.photos/seed/lenovo/800/500", createdAt: "2026-06-20T11:00:00.000Z" }
 ];
 let nextAdId = 6;
 
 const container = document.getElementById("ads");
 const resultCount = document.getElementById("resultCount");
+const totalAdsEl = document.getElementById("totalAds");
+const visibleAdsEl = document.getElementById("visibleAds");
+const totalCategoriesEl = document.getElementById("totalCategories");
 const search = document.getElementById("search");
 const newAdInput = document.getElementById("newAd");
+const newPriceInput = document.getElementById("newPrice");
+const newImageInput = document.getElementById("newImage");
 const categoryFilter = document.getElementById("category");
 const categorySelect = document.getElementById("categorySelect");
 const sortOrder = document.getElementById("sortOrder");
 const themeToggle = document.getElementById("themeToggle");
 const editModal = document.getElementById("editModal");
 const editTitleInput = document.getElementById("editTitle");
+const editPriceInput = document.getElementById("editPrice");
+const editImageInput = document.getElementById("editImage");
 const editCategoryInput = document.getElementById("editCategory");
 let currentEditId = null;
 const THEME_KEY = "simpleAdsTheme";
+
+const categoryIcons = {
+    Cars: "🚗",
+    Phones: "📱",
+    Laptops: "💻",
+    Games: "🎮"
+};
 
 function saveAds() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
@@ -37,6 +51,8 @@ function loadAds() {
                 id: ad.id,
                 title: ad.title,
                 category: ad.category,
+                price: ad.price || "",
+                imageUrl: ad.imageUrl || "",
                 createdAt: ad.createdAt || new Date().toISOString()
             }));
             nextAdId = Math.max(...ads.map(ad => ad.id)) + 1;
@@ -57,25 +73,44 @@ function formatDate(dateString) {
 
 function updateResultCount(count) {
     resultCount.textContent = `Showing ${count} ads`;
+    visibleAdsEl.textContent = count;
+}
+
+function updateStats(filtered) {
+    totalAdsEl.textContent = ads.length;
+    visibleAdsEl.textContent = filtered.length;
+    totalCategoriesEl.textContent = new Set(ads.map(ad => ad.category)).size;
 }
 
 function showAds(list) {
     container.innerHTML = "";
+    const noResults = document.getElementById("noResults");
     if (list.length === 0) {
-        container.innerHTML = `<div class="no-results">No ads found.</div>`;
+        noResults.classList.remove("hidden");
         updateResultCount(0);
         return;
     }
+    noResults.classList.add("hidden");
 
     list.forEach(ad => {
+        const icon = categoryIcons[ad.category] || "";
+        const imageHtml = ad.imageUrl ? `<img class="ad-image" src="${ad.imageUrl}" alt="${ad.title}">` : `<div class="ad-image placeholder">No image</div>`;
+        const priceHtml = ad.price ? `<div class="ad-price">${ad.price}</div>` : '';
         container.innerHTML += `
             <div class="ad">
-                <div class="ad-title">${ad.title}</div>
-                <div class="ad-date">Създадено: ${formatDate(ad.createdAt)}</div>
-                <div class="ad-category">${ad.category}</div>
+                ${imageHtml}
+                <div class="ad-top">
+                    <span class="ad-icon">${icon}</span>
+                    <div>
+                        <div class="ad-category ${ad.category.toLowerCase()}">${ad.category}</div>
+                        <h3 class="ad-title">${ad.title}</h3>
+                    </div>
+                </div>
+                <div class="ad-date">Created: ${formatDate(ad.createdAt)}</div>
+                ${priceHtml}
                 <div class="ad-buttons">
-                    <button class="ad-button edit" onclick="openEditModal(${ad.id})">Редактирай</button>
-                    <button class="ad-button delete" onclick="deleteAd(${ad.id})">Изтрий</button>
+                    <button class="ad-button edit" onclick="openEditModal(${ad.id})">Edit</button>
+                    <button class="ad-button delete" onclick="deleteAd(${ad.id})">Delete</button>
                 </div>
             </div>
         `;
@@ -110,7 +145,9 @@ function filterAds() {
         return matchesSearch && matchesCategory;
     });
 
-    showAds(sortAds(filtered));
+    const sorted = sortAds(filtered);
+    updateStats(sorted);
+    showAds(sorted);
 }
 
 function addAd() {
@@ -122,12 +159,16 @@ function addAd() {
         id: nextAdId++,
         title: value,
         category: categorySelect.value,
+        price: newPriceInput ? newPriceInput.value.trim() : "",
+        imageUrl: newImageInput ? newImageInput.value.trim() : "",
         createdAt: new Date().toISOString()
     };
 
     ads.unshift(newAd);
     saveAds();
     newAdInput.value = "";
+    if (newPriceInput) newPriceInput.value = "";
+    if (newImageInput) newImageInput.value = "";
     categoryFilter.value = "All";
     search.value = "";
     filterAds();
@@ -145,6 +186,8 @@ function openEditModal(id) {
 
     currentEditId = id;
     editTitleInput.value = ad.title;
+    if (editPriceInput) editPriceInput.value = ad.price || "";
+    if (editImageInput) editImageInput.value = ad.imageUrl || "";
     editCategoryInput.value = ad.category;
     editModal.classList.remove("hidden");
 }
@@ -159,6 +202,8 @@ function saveEdit() {
 
     const updatedTitle = editTitleInput.value.trim();
     const updatedCategory = editCategoryInput.value;
+    const updatedPrice = editPriceInput ? editPriceInput.value.trim() : "";
+    const updatedImage = editImageInput ? editImageInput.value.trim() : "";
     if (updatedTitle === "") return;
 
     const ad = ads.find(ad => ad.id === currentEditId);
@@ -166,6 +211,8 @@ function saveEdit() {
 
     ad.title = updatedTitle;
     ad.category = updatedCategory;
+    ad.price = updatedPrice;
+    ad.imageUrl = updatedImage;
     saveAds();
     closeEditModal();
     filterAds();
