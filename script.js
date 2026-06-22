@@ -28,6 +28,15 @@ const editImageInput = document.getElementById("editImage");
 const editCategoryInput = document.getElementById("editCategory");
 let currentEditId = null;
 const THEME_KEY = "simpleAdsTheme";
+const CART_KEY = "simpleAdsCart";
+
+const cartToggle = document.getElementById("cartToggle");
+const cartModal = document.getElementById("cartModal");
+const cartItemsContainer = document.getElementById("cartItems");
+const cartCountEl = document.getElementById("cartCount");
+const successModal = document.getElementById("successModal");
+
+let cart = [];
 
 const categoryIcons = {
     Cars: "🚗",
@@ -35,6 +44,115 @@ const categoryIcons = {
     Laptops: "💻",
     Games: "🎮"
 };
+
+function saveCart() {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    updateCartCount();
+}
+
+function loadCart() {
+    const stored = localStorage.getItem(CART_KEY);
+    if (!stored) return;
+    try {
+        cart = JSON.parse(stored);
+    } catch (e) {
+        console.error("Failed to load cart", e);
+        cart = [];
+    }
+}
+
+function updateCartCount() {
+    cartCountEl.textContent = cart.length;
+}
+
+function addToCart(adId) {
+    const ad = ads.find(a => a.id === adId);
+    if (!ad) return;
+    
+    const existingItem = cart.find(item => item.id === adId);
+    if (existingItem) {
+        alert("This item is already in your cart!");
+        return;
+    }
+    
+    cart.push({
+        id: ad.id,
+        title: ad.title,
+        category: ad.category,
+        price: ad.price
+    });
+    
+    saveCart();
+}
+
+function removeFromCart(adId) {
+    cart = cart.filter(item => item.id !== adId);
+    saveCart();
+    displayCartItems();
+}
+
+function displayCartItems() {
+    cartItemsContainer.innerHTML = "";
+    
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `<div style="padding: 20px; text-align: center; color: #6b7280;">Your cart is empty</div>`;
+        document.getElementById("cartTotalPrice").textContent = "$0";
+        return;
+    }
+    
+    let total = 0;
+    cart.forEach(item => {
+        const priceNum = parseInt(item.price.replace(/[^\d]/g, '')) || 0;
+        total += priceNum;
+        
+        cartItemsContainer.innerHTML += `
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <h3 class="cart-item-title">${item.title}</h3>
+                    <p class="cart-item-category">${item.category}</p>
+                </div>
+                <div class="cart-item-price">${item.price}</div>
+                <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+            </div>
+        `;
+    });
+    
+    document.getElementById("cartTotalPrice").textContent = `${total}`;
+}
+
+function openCart() {
+    displayCartItems();
+    cartModal.classList.remove("hidden");
+}
+
+function closeCart() {
+    cartModal.classList.add("hidden");
+}
+
+function clearCart() {
+    if (confirm("Are you sure you want to clear your cart?")) {
+        cart = [];
+        saveCart();
+        displayCartItems();
+    }
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    
+    closeCart();
+    successModal.classList.remove("hidden");
+    cart = [];
+    saveCart();
+}
+
+function closeSuccess() {
+    successModal.classList.add("hidden");
+}
+
 
 function saveAds() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
@@ -109,6 +227,7 @@ function showAds(list) {
                 <div class="ad-date">Created: ${formatDate(ad.createdAt)}</div>
                 ${priceHtml}
                 <div class="ad-buttons">
+                    <button class="ad-button add-to-cart" onclick="addToCart(${ad.id})">Add to Cart</button>
                     <button class="ad-button edit" onclick="openEditModal(${ad.id})">Edit</button>
                     <button class="ad-button delete" onclick="deleteAd(${ad.id})">Delete</button>
                 </div>
@@ -237,6 +356,7 @@ function loadTheme() {
 
 loadTheme();
 loadAds();
+loadCart();
 filterAds();
 
 search.addEventListener("input", filterAds);
@@ -245,4 +365,16 @@ sortOrder.addEventListener("change", filterAds);
 themeToggle.addEventListener("click", () => {
     const nextTheme = document.body.classList.contains("dark") ? "light" : "dark";
     applyTheme(nextTheme);
+});
+
+cartToggle.addEventListener("click", openCart);
+cartModal.addEventListener("click", (e) => {
+    if (e.target === cartModal) {
+        closeCart();
+    }
+});
+successModal.addEventListener("click", (e) => {
+    if (e.target === successModal) {
+        closeSuccess();
+    }
 });

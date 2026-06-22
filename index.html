@@ -54,6 +54,7 @@
             </div>
         </div>
         <button id="themeToggle" class="theme-toggle">Dark Mode</button>
+        <button id="cartToggle" class="cart-button">🛒 <span id="cartCount">0</span></button>
     </div>
 
     <div class="add-container">
@@ -72,12 +73,34 @@
 </header>
 
 <main>
-    <div id="noResults" class="no-results hidden">
-    No ads found.
-</div>
     <div id="ads"></div>
     <div id="noResults" class="no-results hidden">No ads found.</div>
 </main>
+
+<div id="cartModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Shopping Cart</h2>
+            <button class="modal-close" onclick="closeCart()">&times;</button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-total">
+            <p>Total: <strong id="cartTotalPrice">$0</strong></p>
+        </div>
+        <div class="cart-actions">
+            <button onclick="clearCart()" class="btn-secondary">Clear Cart</button>
+            <button onclick="checkout()" class="btn-primary">Checkout</button>
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal hidden">
+    <div class="modal-content modal-success">
+        <h2>✓ Order Placed!</h2>
+        <p>Thank you for your purchase.</p>
+        <button onclick="closeSuccess()" class="btn-primary">Continue Shopping</button>
+    </div>
+</div>
 
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
